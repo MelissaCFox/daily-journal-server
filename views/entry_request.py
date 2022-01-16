@@ -136,7 +136,7 @@ def update_entry(id, new_entry):
                 concept = ?,
                 entry = ?,
                 mood_id = ?,
-                date = ?,
+                date = ?
         WHERE id = ?
         """, (new_entry['concept'], new_entry['entry'],
               new_entry['mood_id'], new_entry['date'],
