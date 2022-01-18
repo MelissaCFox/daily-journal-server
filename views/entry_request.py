@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import Entry, Mood
+from models import Entry, Mood, Tag
 from .entry_tag_request import create_entry_tag
 
 
@@ -26,6 +26,8 @@ def get_all_entries():
             ON m.id = e.mood_id
         ORDER BY e.id DESC
         """)
+        
+        
 
         # Initialize an empty list to hold all entry representations
         entries = []
@@ -48,6 +50,29 @@ def get_all_entries():
             
             # Add the dictionary representation of the customer to the entry
             entry.mood = mood.__dict__
+            
+            # execute sql again to select all tags associated with entry
+            # fetch all, then for each tag_item in tag_data
+            # create a tag instance and append it to a tags list
+            # entry.tags = the completed tags list
+            db_cursor.execute("""
+            SELECT
+                t.id,
+                t.label
+            FROM EntryTag et
+            JOIN Tag t
+                ON t.id = et.tag_id
+            WHERE et.entry_id = ?
+            """, (row['id'] , ))
+            
+            tag_data = db_cursor.fetchall()
+            
+            tags_list = []
+            for tag_item in tag_data:
+                tag = Tag(tag_item['id'], tag_item['label'])
+                tags_list.append(tag.__dict__)
+            
+            entry.tags = tags_list
             
             # Add the dictionary representation of the entry to the list
             entries.append(entry.__dict__)
@@ -88,6 +113,29 @@ def get_single_entry(id):
         
         mood = Mood(data['mood_id'], data['mood_label'])
         entry.mood = mood.__dict__
+        
+            # execute sql again to select all tags associated with entry
+            # fetch all, then for each tag_item in tag_data
+            # create a tag instance and append it to a tags list
+            # entry.tags = the completed tags list
+        db_cursor.execute("""
+        SELECT
+            t.id,
+            t.label
+        FROM EntryTag et
+        JOIN Tag t
+            ON t.id = et.tag_id
+        WHERE et.entry_id = ?
+        """, (data['id'] , ))
+            
+        tag_data = db_cursor.fetchall()
+            
+        tags_list = []
+        for tag_item in tag_data:
+            tag = Tag(tag_item['id'], tag_item['label'])
+            tags_list.append(tag.__dict__)
+            
+        entry.tags = tags_list
 
         return json.dumps(entry.__dict__)
 
@@ -114,18 +162,20 @@ def create_entry(new_entry):
         # primary key in the response.
         new_entry['id'] = id
         
-        for tag in new_entry['tags']:
-            db_cursor.execute("""
-            INSERT INTO EntryTag
-                ( entry_id, tag_id )
-            VALUES
-                ( ?, ? );
-            """, (new_entry['id'], tag))
+        if 'tags' in new_entry:
+            for tag in new_entry['tags']:
+                db_cursor.execute("""
+                INSERT INTO EntryTag
+                    ( entry_id, tag_id )
+                VALUES
+                    ( ?, ? );
+                """, (new_entry['id'], tag))
 
     return json.dumps(new_entry)
 
 
 def delete_entry(id):
+    # with-as automatically closes the connection when done
     with sqlite3.connect("./dailyjournal.sqlite3") as conn:
         db_cursor = conn.cursor()
 
@@ -207,6 +257,29 @@ def get_entry_search_results(search_term):
             
             # Add the dictionary representation of the customer to the entry
             entry.mood = mood.__dict__
+            
+                        # execute sql again to select all tags associated with entry
+            # fetch all, then for each tag_item in tag_data
+            # create a tag instance and append it to a tags list
+            # entry.tags = the completed tags list
+            db_cursor.execute("""
+            SELECT
+                t.id,
+                t.label
+            FROM EntryTag et
+            JOIN Tag t
+                ON t.id = et.tag_id
+            WHERE et.entry_id = ?
+            """, (row['id'] , ))
+            
+            tag_data = db_cursor.fetchall()
+            
+            tags_list = []
+            for tag_item in tag_data:
+                tag = Tag(tag_item['id'], tag_item['label'])
+                tags_list.append(tag.__dict__)
+            
+            entry.tags = tags_list
             
             # Add the dictionary representation of the entry to the list
             entries.append(entry.__dict__)

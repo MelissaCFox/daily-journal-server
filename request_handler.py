@@ -122,6 +122,9 @@ class HandleRequests(BaseHTTPRequestHandler):
             # query parameter that specified the search
             # term as a filtering value?
             if key == "q" and resource == "entries":
+                # No longer necessary to format response in an f-string
+                # because json.dumps within the get_entry... function does
+                # that for us
                 response = get_entry_search_results(value)
 
         self.wfile.write(response.encode())
