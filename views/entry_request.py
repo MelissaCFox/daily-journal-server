@@ -1,6 +1,7 @@
 import sqlite3
 import json
 from models import Entry, Mood
+from .entry_tag_request import create_entry_tag
 
 
 def get_all_entries():
@@ -112,6 +113,14 @@ def create_entry(new_entry):
         # was sent by the client so that the client sees the
         # primary key in the response.
         new_entry['id'] = id
+        
+        for tag in new_entry['tags']:
+            db_cursor.execute("""
+            INSERT INTO EntryTag
+                ( entry_id, tag_id )
+            VALUES
+                ( ?, ? );
+            """, (new_entry['id'], tag))
 
     return json.dumps(new_entry)
 
