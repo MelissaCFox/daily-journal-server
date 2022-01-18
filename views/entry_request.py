@@ -183,6 +183,21 @@ def delete_entry(id):
         DELETE FROM entry
         WHERE id = ?
         """, (id, ))
+        
+        db_cursor.execute("""
+        SELECT
+            et.id
+        FROM EntryTag et
+        WHERE et.entry_id = ?
+        """, (id , ))
+            
+        et_ids = db_cursor.fetchall()
+        
+        for et_id in et_ids:
+            db_cursor.execute("""
+            DELETE FROM EntryTag
+            WHERE id = ?
+            """, (et_id[0], ))
 
 
 def update_entry(id, new_entry):
