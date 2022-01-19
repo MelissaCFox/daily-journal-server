@@ -216,6 +216,26 @@ def update_entry(id, new_entry):
               new_entry['mood_id'], new_entry['date'],
               id, ))
 
+
+        # Get all current entry tags with entry_id == id
+        # compare to new_entry['tags']
+        # if it exists in current entry tags but not new tags, delete
+        # if it exists in new tags but not current entry tags, insert
+        db_cursor.execute("""
+            SELECT * FROM EntryTag et
+            WHERE et.entry_id = ?
+        """, (id, ))
+        
+        existing_entry_tags = db_cursor.fetchall()
+        
+        if 'tags' in new_entry:
+            for tag in existing_entry_tags:
+                if int(tag[2]) not in new_entry['tags']:
+                    db_cursor.execute("""
+                        DELETE FROM EntryTag
+                        WHERE id = ?
+                        """, (tag[0], ))
+
         # Were any rows affected?
         # Did the client send an `id` that exists?
         rows_affected = db_cursor.rowcount

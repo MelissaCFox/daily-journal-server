@@ -17,17 +17,29 @@ CREATE TABLE `Tag` (
 );
 
 
+DROP TABLE IF EXISTS EntryTag;
+
 CREATE TABLE `EntryTag` (
     `id`    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     `entry_id`    INTEGER NOT NULL,
-    `tag_id`    TEXT NOT NULL, 
+    `tag_id`    INTEGER NOT NULL, 
     FOREIGN KEY('tag_id') REFERENCES 'Tag'('id'), FOREIGN KEY('entry_id') REFERENCES 'Entry'('id')
 );
 
-INSERT INTO "EntryTag" VALUES (null, 1, 1);
-INSERT INTO "EntryTag" VALUES (null, 2, 6);
-INSERT INTO "EntryTag" VALUES (null, 3, 5);
+INSERT INTO "EntryTag" VALUES (null, 5, 1);
+INSERT INTO "EntryTag" VALUES (null, 6, 6);
+INSERT INTO "EntryTag" VALUES (null, 7, 5);
 INSERT INTO "EntryTag" VALUES (null, 4, 4);
+INSERT INTO "EntryTag" VALUES (null, 9, 1);
+INSERT INTO "EntryTag" VALUES (null, 5, 2);
+INSERT INTO "EntryTag" VALUES (null, 26, 1);
+INSERT INTO "EntryTag" VALUES (null, 26, 2);
+INSERT INTO "EntryTag" VALUES (null, 26, 3);
+INSERT INTO "EntryTag" VALUES (null, 26, 4);
+INSERT INTO "EntryTag" VALUES (null, 26, 5);
+INSERT INTO "EntryTag" VALUES (null, 26, 6);
+
+
 
         SELECT
             e.id,
@@ -85,3 +97,6 @@ FROM EntryTag et
 JOIN Tag t
     ON t.id = et.tag_id
 WHERE et.entry_id = 14
+
+SELECT * FROM EntryTag et
+WHERE et.entry_id = 26
