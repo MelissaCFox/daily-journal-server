@@ -235,6 +235,20 @@ def update_entry(id, new_entry):
                         DELETE FROM EntryTag
                         WHERE id = ?
                         """, (tag[0], ))
+            
+            for tag_id in new_entry['tags']:
+                db_cursor.execute("""
+                    SELECT * FROM EntryTag
+                    WHERE entry_id = ? AND tag_id = ?
+                    """, (new_entry['id'], tag_id))
+                if len(db_cursor.fetchall()) == 0:
+                    db_cursor.execute("""
+                    INSERT INTO EntryTag
+                        ( entry_id, tag_id )
+                    VALUES
+                        ( ?, ? );
+                    """, (new_entry['id'], tag_id))
+            
 
         # Were any rows affected?
         # Did the client send an `id` that exists?

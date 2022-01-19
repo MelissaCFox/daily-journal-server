@@ -92,3 +92,7 @@ WHERE et.entry_id = 14
 
 SELECT * FROM EntryTag et
 WHERE et.entry_id = 26
+
+
+SELECT * FROM EntryTag
+WHERE entry_id = 26 AND tag_id = 6
