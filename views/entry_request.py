@@ -230,7 +230,7 @@ def update_entry(id, new_entry):
         
         if 'tags' in new_entry:
             for tag in existing_entry_tags:
-                if int(tag[2]) not in new_entry['tags']:
+                if tag[2] not in new_entry['tags']:
                     db_cursor.execute("""
                         DELETE FROM EntryTag
                         WHERE id = ?

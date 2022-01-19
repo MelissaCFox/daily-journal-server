@@ -17,7 +17,6 @@ CREATE TABLE `Tag` (
 );
 
 
-DROP TABLE IF EXISTS EntryTag;
 
 CREATE TABLE `EntryTag` (
     `id`    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -26,19 +25,12 @@ CREATE TABLE `EntryTag` (
     FOREIGN KEY('tag_id') REFERENCES 'Tag'('id'), FOREIGN KEY('entry_id') REFERENCES 'Entry'('id')
 );
 
-INSERT INTO "EntryTag" VALUES (null, 5, 1);
-INSERT INTO "EntryTag" VALUES (null, 6, 6);
-INSERT INTO "EntryTag" VALUES (null, 7, 5);
-INSERT INTO "EntryTag" VALUES (null, 4, 4);
-INSERT INTO "EntryTag" VALUES (null, 9, 1);
-INSERT INTO "EntryTag" VALUES (null, 5, 2);
 INSERT INTO "EntryTag" VALUES (null, 26, 1);
 INSERT INTO "EntryTag" VALUES (null, 26, 2);
 INSERT INTO "EntryTag" VALUES (null, 26, 3);
 INSERT INTO "EntryTag" VALUES (null, 26, 4);
 INSERT INTO "EntryTag" VALUES (null, 26, 5);
 INSERT INTO "EntryTag" VALUES (null, 26, 6);
-
 
 
         SELECT
