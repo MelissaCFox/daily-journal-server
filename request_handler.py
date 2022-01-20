@@ -185,8 +185,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         success = False
 
         if resource == "entries":
-            success = True
-            update_entry(id, post_body)
+            success = update_entry(id, post_body)
 
         if success:
             self._set_headers(204)

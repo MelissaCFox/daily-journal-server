@@ -112,7 +112,7 @@ def update_entry_tag(id, new_entry_tag):
         db_cursor.execute("""
         UPDATE EntryTag
             SET
-                entry_id = ?
+                entry_id = ?,
                 tag_id = ?
         WHERE id = ?
         """, (new_entry_tag['entry_id'], new_entry_tag['tag_id'], id, ))

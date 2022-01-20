@@ -230,17 +230,23 @@ def update_entry(id, new_entry):
         
         if 'tags' in new_entry:
             for tag in existing_entry_tags:
+            # For each row of existing entry tags, check if the value
+            # of tag_id exists in the new_entry's tags array
+            # If not: delete that entry tag from the database
                 if tag[2] not in new_entry['tags']:
                     db_cursor.execute("""
                         DELETE FROM EntryTag
                         WHERE id = ?
                         """, (tag[0], ))
             
+            # For each tagId in the new_entry's tag array, check if that
+            # combo of entry_id and tag_id exists in the database
             for tag_id in new_entry['tags']:
                 db_cursor.execute("""
                     SELECT * FROM EntryTag
                     WHERE entry_id = ? AND tag_id = ?
                     """, (new_entry['id'], tag_id))
+                # If no matches come back, create a a new entry tag
                 if len(db_cursor.fetchall()) == 0:
                     db_cursor.execute("""
                     INSERT INTO EntryTag
